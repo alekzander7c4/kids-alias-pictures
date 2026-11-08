@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#172554">
+<title>Kids’ Alias — pictures</title>
+<style>
+:root{--bg:#f3f6ff;--ink:#172554;--accent:#4f46e5;--card:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,#172554,#4338ca);color:white;padding:18px 16px 22px;text-align:center}
+.header-inner{max-width:650px;width:100%;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}.header-inner>div:first-child{flex:1;text-align:center}h1{font-size:24px;margin:0 0 5px}.sub{opacity:.85;font-size:14px}
+.language-toggle{display:flex;align-items:center;gap:3px;padding:5px 8px;background:#ffffff24;border:1px solid #ffffff55;border-radius:999px;color:white;font-size:23px;line-height:1;flex:none}
+.language-toggle .flag{display:flex;filter:grayscale(1);opacity:.55;transition:filter .18s,opacity .18s}.language-toggle .flag.active{filter:none;opacity:1}.language-toggle svg{display:block;width:28px;height:20px;border-radius:2px}
+@media(max-width:480px){.header-inner{gap:9px}.header-inner h1{font-size:21px}.header-inner .sub{font-size:12px}.language-toggle{font-size:19px;padding:5px 7px}}
+main{max-width:650px;margin:auto;padding:14px}
+.panel{background:white;border-radius:18px;padding:14px;margin:12px 0;box-shadow:0 5px 18px #17255412}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+button,select{font:inherit;border:0;border-radius:12px;padding:12px 14px;background:#e8eaff;color:var(--ink);font-weight:650}
+button.primary{background:var(--accent);color:white}button.dark{background:#172554;color:white}button:active{transform:scale(.98)}
+select{width:100%;background:#f0f2ff}
+#picture{font-size:clamp(90px,25vw,150px);line-height:1.5;text-align:center;min-height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column}
+#answer{font-size:24px;font-weight:800;text-align:center;min-height:36px}
+#hint{font-size:13px;text-align:center;color:#64748b}
+.stat{font-weight:750;font-size:15px}.small{font-size:13px;color:#64748b}
+.grid{display:grid;grid-template-columns:1fr;gap:9px}
+.grid button{width:100%}.hidden{display:none!important}
+#timer{font-size:30px;font-weight:850;font-variant-numeric:tabular-nums}
+footer{text-align:center;color:#64748b;font-size:12px;padding:12px}
+</style>
+</head>
+<body>
+<header><div class="header-inner"><div><h1 id="title">🎉 Дитячий Alias</h1><div class="sub" id="subtitle">Граємо за картинками — читати не потрібно!</div></div><button class="language-toggle" id="language" type="button" aria-label="Switch language" title="Мова / Language"><span class="flag" id="flagUk" role="img" aria-label="Українська"><svg viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="10" fill="#0057b8"/><rect y="10" width="28" height="10" fill="#ffd700"/></svg></span><span class="flag" id="flagEn" role="img" aria-label="English"><svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"/><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="9"/><path d="M0 0 60 40M60 0 0 40" stroke="#c8102e" stroke-width="4"/><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="14"/><path d="M30 0v40M0 20h60" stroke="#c8102e" stroke-width="8"/></svg></span></button></div></header>
+<main>
+<section class="panel">
+ <div class="row"><label for="category"><b id="categoryLabel">Категорія</b></label><span class="stat" id="count">500 карток</span></div>
+ <select id="category"><option value="all">Усі категорії</option></select>
+ <div class="row" style="margin-top:12px"><label for="duration"><b id="durationLabel">Тривалість раунду</b></label>
+ <select id="duration" style="width:auto"><option value="30">30 секунд</option><option value="45" selected>45 секунд</option><option value="60">60 секунд</option><option value="90">90 секунд</option></select></div>
+</section>
+<section class="panel">
+ <div class="row"><span class="stat" id="round">Раунд 1</span><span id="timer">45</span><span class="stat">⭐ <span id="score">0</span></span></div>
+ <div id="picture">🐶</div>
+ <div id="answer"></div>
+ <div id="hint">Поясни картинку словами або жестами. Не називай її!</div>
+ <div class="grid" style="margin-top:12px">
+  <button class="primary" id="correct">✓ Вірно (+1)</button>
+  <button id="skip">Пропустити ↷</button>
+ </div>
+ <div class="row" style="margin-top:12px"><button class="dark" id="start">▶ Почати раунд</button><button id="reset">Обнулити бали</button></div>
+</section>
+<section class="panel">
+ <b id="howTitle">Як грати</b>
+ <p class="small">1. Дитина дивиться на картинку й пояснює її дорослому словами або жестами. Або дорослий пояснює картинку дитині.</p>
+ <p class="small">2. Не можна вимовляти саме слово-відповідь. Натисніть «Показати відповідь», щоб перевірити.</p>
+ <p class="small">3. За кожну вгадану картинку натискайте «Вгадали». Можна грати й без таймера.</p>
+</section>
+</main>
+<footer>Працює локально після завантаження файлу. Картки та бали не надсилаються в інтернет.</footer>
+<script>
+const raw = {
+"Тварини": [
+["🐶","собака"],["🐱","кіт"],["🐭","миша"],["🐹","хом’як"],["🐰","кролик"],["🦊","лисиця"],["🐻","ведмідь"],["🐼","панда"],["🐨","коала"],["🐯","тигр"],
+["🦁","лев"],["🐮","корова"],["🐷","свиня"],["🐸","жаба"],["🐵","мавпа"],["🐔","курка"],["🐧","пінгвін"],["🐦","пташка"],["🦆","качка"],["🦅","орел"],
+["🦉","сова"],["🦇","кажан"],["🐺","вовк"],["🐗","кабан"],["🐴","кінь"],["🦄","єдиноріг"],["🐝","бджола"],["🦋","метелик"],["🐌","равлик"],["🐢","черепаха"],
+["🐍","змія"],["🦎","ящірка"],["🐊","крокодил"],["🐬","дельфін"],["🐳","кит"],["🦈","акула"],["🐙","восьминіг"],["🦀","краб"],["🦐","креветка"],["🐠","рибка"],
+["🦓","зебра"],["🦒","жирафа"],["🐘","слон"],["🦛","бегемот"],["🦏","носоріг"],["🐪","верблюд"],["🦘","кенгуру"],["🦥","лінивець"],["🦔","їжак"],["🦚","павич"]],
+"Їжа та напої": [
+["🍎","яблуко"],["🍐","груша"],["🍊","апельсин"],["🍋","лимон"],["🍌","банан"],["🍉","кавун"],["🍇","виноград"],["🍓","полуниця"],["🫐","чорниця"],["🍒","вишня"],
+["🍑","персик"],["🥭","манго"],["🍍","ананас"],["🥥","кокос"],["🥝","ківі"],["🍅","помідор"],["🥒","огірок"],["🥕","морква"],["🌽","кукурудза"],["🥔","картопля"],
+["🧅","цибуля"],["🧄","часник"],["🥦","броколі"],["🍄","гриб"],["🥑","авокадо"],["🍞","хліб"],["🥐","круасан"],["🧀","сир"],["🥚","яйце"],["🥞","млинці"],
+["🍕","піца"],["🍔","бургер"],["🍟","картопля фрі"],["🌭","хот-дог"],["🍿","попкорн"],["🍩","пончик"],["🍪","печиво"],["🎂","торт"],["🍦","морозиво"],["🍫","шоколад"],
+["🍯","мед"],["🥛","молоко"],["🧃","сік"],["☕","кава"],["🍵","чай"],["🧁","кекс"],["🥨","крендель"],["🍚","рис"],["🍝","макарони"],["🥣","суп"]],
+"Транспорт": [
+["🚗","автомобіль"],["🚕","таксі"],["🚌","автобус"],["🚎","тролейбус"],["🚓","поліцейська машина"],["🚑","швидка"],["🚒","пожежна машина"],["🚚","вантажівка"],["🚜","трактор"],["🏎️","гоночна машина"],
+["🚲","велосипед"],["🛴","самокат"],["🛵","мопед"],["🏍️","мотоцикл"],["🚂","паровоз"],["🚆","поїзд"],["🚇","метро"],["🚁","гелікоптер"],["✈️","літак"],["🚀","ракета"],
+["🛸","літаюча тарілка"],["⛵","вітрильник"],["🚤","катер"],["🛳️","корабель"],["🚢","лайнер"],["🛶","човен"],["🚡","канатна дорога"],["🚠","підйомник"],["🛞","колесо"],["🛺","рикша"],
+["🚃","трамвайний вагон"],["🚄","швидкісний потяг"],["🚈","міська електричка"],["🚍","шкільний автобус"],["🚔","поліцейський автомобіль"],["🚖","таксі з шашечками"],["🚘","легковик"],["🚛","фура"],["🚜","сільськогосподарський трактор"],["🛻","пікап"],
+["🛵","скутер"],["🛹","скейтборд"],["🛼","ролики"],["🛝","гірка"],["🛞","шина"],["🚏","зупинка"],["⛽","заправка"],["🚦","світлофор"],["🚧","дорожні роботи"],["🛤️","залізнична колія"]],
+"Предмети вдома": [
+["🪑","стілець"],["🛏️","ліжко"],["🛋️","диван"],["🚪","двері"],["🪟","вікно"],["🪞","дзеркало"],["🛁","ванна"],["🚿","душ"],["🚽","туалет"],["🧻","туалетний папір"],
+["🧹","віник"],["🧽","губка"],["🧺","кошик для білизни"],["🧼","мило"],["🪥","зубна щітка"],["🧴","пляшка шампуню"],["🧸","ведмедик"],["🪀","йо-йо"],["🧩","пазл"],["🎈","повітряна кулька"],
+["💡","лампочка"],["🔦","ліхтарик"],["🕯️","свічка"],["⏰","будильник"],["📺","телевізор"],["📻","радіо"],["📱","телефон"],["💻","ноутбук"],["⌨️","клавіатура"],["🖱️","мишка комп’ютера"],
+["📷","фотоапарат"],["🎧","навушники"],["🔑","ключ"],["🔒","замок"],["✂️","ножиці"],["🧷","шпилька"],["🪡","голка"],["🧵","нитка"],["🧯","вогнегасник"],["🪣","відро"],
+["🧹","швабра"],["🧊","лід"],["🧺","кошик"],["🪜","драбина"],["🧰","ящик з інструментами"],["🔨","молоток"],["🪛","викрутка"],["🪚","пилка"],["🧲","магніт"],["🪴","кімнатна рослина"]],
+"Професії та люди": [
+["👨‍⚕️","лікар"],["👩‍⚕️","лікарка"],["👨‍🚒","пожежник"],["👮","поліцейський"],["👩‍🏫","вчителька"],["👨‍🍳","кухар"],["🧑‍🚀","космонавт"],["🧑‍🎨","художник"],["🧑‍🔧","механік"],["🧑‍🌾","фермер"],
+["🧑‍✈️","пілот"],["🧑‍🚀","астронавт"],["🧑‍🎤","співак"],["🧑‍⚖️","суддя"],["🧑‍🔬","науковець"],["🧑‍💻","програміст"],["🧑‍🚒","рятувальник"],["🧑‍🏭","робітник"],["🧑‍🍳","кухарка"],["🧑‍🎓","студент"],
+["👶","немовля"],["🧒","дитина"],["🧓","дідусь або бабуся"],["👰","наречена"],["🤵","наречений"],["🤡","клоун"],["🥷","ніндзя"],["🦸","супергерой"],["🧙","чарівник"],["🧚","фея"],
+["🧜","русалка"],["🧛","вампір"],["🧟","зомбі"],["🧌","троль"],["👑","король"],["👸","принцеса"],["🤴","принц"],["🧑‍🚀","космонавт"],["🕵️","детектив"],["💂","охоронець"],
+["🧑‍🚴","велосипедист"],["🏃","бігун"],["🏊","плавець"],["🧗","скелелаз"],["🧑‍🎄","Санта"],["🎅","Дід Мороз"],["🧑‍🌾","садівник"],["🧑‍🏫","учитель"],["🧑‍🔬","дослідник"],["🧑‍🎯","спортсмен"]],
+"Природа та погода": [
+["☀️","сонце"],["🌙","місяць"],["⭐","зірка"],["🌈","веселка"],["☁️","хмара"],["🌧️","дощ"],["⛈️","гроза"],["❄️","сніг"],["🌪️","торнадо"],["🌊","хвиля"],
+["🔥","вогонь"],["💧","крапля води"],["🌳","дерево"],["🌲","ялинка"],["🌴","пальма"],["🌵","кактус"],["🌷","тюльпан"],["🌹","троянда"],["🌻","соняшник"],["🌼","ромашка"],
+["🍀","конюшина"],["🍁","кленовий листок"],["🍂","осіннє листя"],["🌱","паросток"],["🌾","колосся"],["🍄","гриб"],["🏔️","гори"],["🌋","вулкан"],["🏝️","острів"],["🏖️","пляж"],
+["🏜️","пустеля"],["🌅","схід сонця"],["🌄","гірський світанок"],["🌌","зоряне небо"],["🌍","Земля"],["🪨","камінь"],["🪵","колода"],["🏕️","намет"],["🪺","гніздо"],["🪸","корал"],
+["🌺","гібіскус"],["🪷","лотос"],["🌿","листя"],["🌾","трава"],["🌬️","вітер"],["🌫️","туман"],["🌡️","термометр"],["🧊","крижинка"],["🌠","падаюча зірка"],["🌳","ліс"]],
+"Одяг та аксесуари": [
+["👕","футболка"],["👖","штани"],["👗","сукня"],["👚","блузка"],["🧥","куртка"],["🧦","шкарпетки"],["👟","кросівки"],["👞","черевики"],["👢","чоботи"],["🩴","капці"],
+["🧢","кепка"],["👒","капелюх"],["🎩","циліндр"],["🧣","шарф"],["🧤","рукавички"],["🧤","рукавиця"],["🕶️","сонцезахисні окуляри"],["👓","окуляри"],["⌚","годинник"],["💍","каблучка"],
+["🎒","рюкзак"],["👜","сумка"],["👛","гаманець"],["🧳","валіза"],["☂️","парасолька"],["👑","корона"],["💄","помада"],["🪮","гребінець"],["🪭","віяло"],["🪡","голка"],
+["🥼","халат"],["🦺","жилет"],["🥻","сарі"],["🩱","купальник"],["🩳","шорти"],["🩲","труси"],["🩰","балетки"],["🥾","туристичні черевики"],["🪖","шолом"],["⛑️","каска"],
+["🎀","бантик"],["🧵","клубок ниток"],["🧶","вовна"],["🪢","вузол"],["👔","краватка"],["🧷","булавка"],["🧼","мило"],["🧴","крем"],["💎","діамант"],["📿","намисто"]],
+"Іграшки та розваги": [
+["⚽","футбольний м’яч"],["🏀","баскетбольний м’яч"],["🏈","м’яч для американського футболу"],["⚾","бейсбольний м’яч"],["🎾","тенісний м’яч"],["🏐","волейбольний м’яч"],["🎱","більярдні кулі"],["🏓","настільний теніс"],["🏸","бадмінтон"],["🥊","боксерська рукавичка"],
+["🪁","повітряний змій"],["🪀","йо-йо"],["🧸","плюшевий ведмедик"],["🪆","матрьошка"],["🧩","пазл"],["♟️","шахова фігура"],["🎲","кубик"],["🃏","карта джокер"],["🎯","мішень"],["🎳","боулінг"],
+["🎮","ігрова приставка"],["🕹️","джойстик"],["🎸","гітара"],["🎹","піаніно"],["🥁","барабан"],["🎺","труба"],["🎻","скрипка"],["🎤","мікрофон"],["🎧","навушники"],["🎨","палітра"],
+["🖍️","олівці"],["🪇","маракаси"],["🪈","флейта"],["🎬","кіно"],["🎭","маски театру"],["🎪","цирк"],["🎠","карусель"],["🎡","колесо огляду"],["🎢","американські гірки"],["🎟️","квиток"],
+["🏆","кубок"],["🥇","золота медаль"],["🛹","скейтборд"],["🛼","ролики"],["⛸️","ковзани"],["🎿","лижі"],["🏹","лук"],["🪃","бумеранг"],["🧗","скелелазіння"],["🪄","чарівна паличка"]],
+"Морські та казкові": [
+["🧜‍♀️","русалка"],["🧚‍♀️","фея"],["🧙‍♂️","чарівник"],["🐉","дракон"],["🦄","єдиноріг"],["🧞","джин"],["🧛‍♂️","вампір"],["🧟‍♂️","зомбі"],["👻","привид"],["💀","череп"],
+["🧌","троль"],["🧝","ельф"],["🦸‍♀️","супергероїня"],["🦹","лиходій"],["🧑‍🚀","космічний мандрівник"],["🪄","чарівна паличка"],["🧪","магічне зілля"],["🔮","кришталева куля"],["🗝️","чарівний ключ"],["🏰","замок"],
+["🛡️","щит"],["⚔️","мечі"],["🪓","сокира"],["🏹","лук і стріли"],["🐚","мушля"],["🪸","корал"],["🦑","кальмар"],["🪼","медуза"],["🦭","тюлень"],["🦦","видра"],
+["🦞","омар"],["🦪","устриця"],["🐡","риба фугу"],["🪷","водяна лілія"],["⚓","якір"],["🏴‍☠️","піратський прапор"],["🧜‍♂️","морський цар"],["🐲","голова дракона"],["🪺","чарівне гніздо"],["🧚","маленька фея"],
+["🧝‍♀️","ельфійка"],["🧙‍♀️","відьма"],["🧟‍♀️","зомбі"],["🧛","вампір"],["🦇","кажан"],["🌕","повний місяць"],["🕸️","павутина"],["🕷️","павук"],["🪦","надгробок"],["🧿","оберіг"]],
+"Спорт і рух": [
+["🏃","біг"],["🚶","ходьба"],["🧎","стояти на колінах"],["🤸","перекид"],["🤹","жонглювання"],["🧘","йога"],["🏋️","підняття ваги"],["🤼","боротьба"],["🤺","фехтування"],["🏊","плавання"],
+["🚴","велоспорт"],["🚵","гірський велосипед"],["🧗","скелелазіння"],["🏄","серфінг"],["🏇","верхова їзда"],["⛷️","лижник"],["🏂","сноуборд"],["🤽","водне поло"],["🤾","гандбол"],["🏌️","гольф"],
+["🥋","карате"],["🥅","ворота"],["🏟️","стадіон"],["🏅","медаль"],["🎖️","нагорода"],["🛝","катання з гірки"],["🛹","скейтбординг"],["🛼","катання на роликах"],["⛸️","фігурне катання"],["🪂","парашут"],
+["🛶","веслування"],["🚣","човняр"],["🏹","стрільба з лука"],["🎣","рибалка"],["🧘‍♀️","розтяжка"],["🤾‍♀️","гандболістка"],["🏐","волейбол"],["🏀","баскетбол"],["⚽","футбол"],["🎾","теніс"],
+["🏓","пінг-понг"],["🏸","бадмінтон"],["🥊","бокс"],["🥋","дзюдо"],["🏆","перемога"],["🥇","перше місце"],["🥈","друге місце"],["🥉","третє місце"],["🚩","прапорець"],["⏱️","секундомір"]],
+"Місця та будівлі": [
+["🏠","будинок"],["🏡","будинок із садом"],["🏢","офіс"],["🏫","школа"],["🏥","лікарня"],["🏦","банк"],["🏨","готель"],["🏪","магазин"],["🏬","торговий центр"],["🏭","завод"],
+["🏰","замок"],["⛪","церква"],["🕌","мечеть"],["🛕","храм"],["🗼","вежа"],["🗽","статуя свободи"],["🗿","кам’яна статуя"],["⛲","фонтан"],["🌉","міст"],["🛣️","шосе"],
+["🚉","вокзал"],["🚏","автобусна зупинка"],["✈️","аеропорт"],["⚓","порт"],["🏟️","стадіон"],["🎡","парк атракціонів"],["🎢","американські гірки"],["🏖️","морський пляж"],["🏕️","кемпінг"],["⛺","намет"],
+["🏝️","тропічний острів"],["🏜️","пустеля"],["🏔️","гірська вершина"],["🌋","вулкан"],["🗻","гора Фудзі"],["🏞️","національний парк"],["🌆","місто ввечері"],["🌃","нічне місто"],["🏙️","місто з хмарочосами"],["🌇","захід сонця над містом"],
+["🏘️","селище"],["🏚️","старий будинок"],["🏗️","будівництво"],["🛖","хатинка"],["🏛️","музей"],["📚","бібліотека"],["🎭","театр"],["🎬","кінотеатр"],["🛒","супермаркет"],["🧸","дитяча кімната"]]
+};
+let language='uk';
+const categoryEn={'Тварини':'Animals','Їжа та напої':'Food & Drinks','Транспорт':'Transport','Предмети вдома':'Household Items','Професії та люди':'Jobs & People','Природа та погода':'Nature & Weather','Одяг та аксесуари':'Clothes & Accessories','Іграшки та розваги':'Toys & Fun','Морські та казкові':'Sea & Fantasy','Спорт і рух':'Sports & Movement','Місця та будівлі':'Places & Buildings'};
+const wordEn={
+'собака':'dog','кіт':'cat','миша':'mouse','хом’як':'hamster','кролик':'rabbit','лисиця':'fox','ведмідь':'bear','панда':'panda','коала':'koala','тигр':'tiger','лев':'lion','корова':'cow','свиня':'pig','жаба':'frog','мавпа':'monkey','курка':'chicken','пінгвін':'penguin','пташка':'bird','качка':'duck','орел':'eagle','сова':'owl','кажан':'bat','вовк':'wolf','кабан':'boar','кінь':'horse','єдиноріг':'unicorn','бджола':'bee','метелик':'butterfly','равлик':'snail','черепаха':'turtle','змія':'snake','ящірка':'lizard','крокодил':'crocodile','дельфін':'dolphin','кит':'whale','акула':'shark','восьминіг':'octopus','краб':'crab','креветка':'shrimp','рибка':'fish','зебра':'zebra','жирафа':'giraffe','слон':'elephant','бегемот':'hippopotamus','носоріг':'rhinoceros','верблюд':'camel','кенгуру':'kangaroo','лінивець':'sloth','їжак':'hedgehog','павич':'peacock',
+'яблуко':'apple','груша':'pear','апельсин':'orange','лимон':'lemon','банан':'banana','кавун':'watermelon','виноград':'grapes','полуниця':'strawberry','чорниця':'blueberry','вишня':'cherry','персик':'peach','манго':'mango','ананас':'pineapple','кокос':'coconut','ківі':'kiwi','помідор':'tomato','огірок':'cucumber','морква':'carrot','кукурудза':'corn','картопля':'potato','цибуля':'onion','часник':'garlic','броколі':'broccoli','гриб':'mushroom','авокадо':'avocado','хліб':'bread','круасан':'croissant','сир':'cheese','яйце':'egg','млинці':'pancakes','піца':'pizza','бургер':'burger','картопля фрі':'fries','хот-дог':'hot dog','попкорн':'popcorn','пончик':'doughnut','печиво':'cookie','торт':'cake','морозиво':'ice cream','шоколад':'chocolate','мед':'honey','молоко':'milk','сік':'juice','кава':'coffee','чай':'tea','кекс':'cupcake','крендель':'pretzel','рис':'rice','макарони':'pasta','суп':'soup',
+'автомобіль':'car','таксі':'taxi','автобус':'bus','тролейбус':'trolleybus','поліцейська машина':'police car','швидка':'ambulance','пожежна машина':'fire truck','вантажівка':'truck','трактор':'tractor','гоночна машина':'race car','велосипед':'bicycle','самокат':'scooter','мопед':'moped','мотоцикл':'motorcycle','паровоз':'steam train','поїзд':'train','метро':'subway','гелікоптер':'helicopter','літак':'airplane','ракета':'rocket','літаюча тарілка':'flying saucer','вітрильник':'sailboat','катер':'speedboat','корабель':'ship','лайнер':'liner','човен':'boat','канатна дорога':'cable car','підйомник':'ski lift','колесо':'wheel','рикша':'rickshaw','трамвайний вагон':'tram','швидкісний потяг':'bullet train','міська електричка':'commuter train','шкільний автобус':'school bus','поліцейський автомобіль':'police car','таксі з шашечками':'cab','легковик':'car','фура':'semi truck','сільськогосподарський трактор':'farm tractor','пікап':'pickup truck','скутер':'scooter','скейтборд':'skateboard','ролики':'roller skates','гірка':'slide','шина':'tire','зупинка':'bus stop','заправка':'gas station','світлофор':'traffic light','дорожні роботи':'roadworks','залізнична колія':'railway track',
+'стілець':'chair','ліжко':'bed','диван':'sofa','двері':'door','вікно':'window','дзеркало':'mirror','ванна':'bathtub','душ':'shower','туалет':'toilet','туалетний папір':'toilet paper','віник':'broom','губка':'sponge','кошик для білизни':'laundry basket','мило':'soap','зубна щітка':'toothbrush','пляшка шампуню':'shampoo bottle','ведмедик':'teddy bear','йо-йо':'yo-yo','пазл':'puzzle','повітряна кулька':'balloon','лампочка':'light bulb','ліхтарик':'flashlight','свічка':'candle','будильник':'alarm clock','телевізор':'television','радіо':'radio','телефон':'phone','ноутбук':'laptop','клавіатура':'keyboard','мишка комп’ютера':'computer mouse','фотоапарат':'camera','навушники':'headphones','ключ':'key','замок':'lock','ножиці':'scissors','шпилька':'pin','голка':'needle','нитка':'thread','вогнегасник':'fire extinguisher','відро':'bucket','швабра':'mop','лід':'ice','кошик':'basket','драбина':'ladder','ящик з інструментами':'toolbox','молоток':'hammer','викрутка':'screwdriver','пилка':'saw','магніт':'magnet','кімнатна рослина':'houseplant',
+'лікар':'doctor','лікарка':'doctor','пожежник':'firefighter','поліцейський':'police officer','вчителька':'teacher','кухар':'cook','космонавт':'astronaut','художник':'artist','механік':'mechanic','фермер':'farmer','пілот':'pilot','астронавт':'astronaut','співак':'singer','суддя':'judge','науковець':'scientist','програміст':'programmer','рятувальник':'rescuer','робітник':'worker','кухарка':'cook','студент':'student','немовля':'baby','дитина':'child','дідусь або бабуся':'grandparent','наречена':'bride','наречений':'groom','клоун':'clown','ніндзя':'ninja','супергерой':'superhero','чарівник':'wizard','фея':'fairy','русалка':'mermaid','вампір':'vampire','зомбі':'zombie','троль':'troll','король':'king','принцеса':'princess','принц':'prince','детектив':'detective','охоронець':'guard','велосипедист':'cyclist','бігун':'runner','плавець':'swimmer','скелелаз':'rock climber','Санта':'Santa Claus','Дід Мороз':'Father Frost','садівник':'gardener','учитель':'teacher','дослідник':'researcher','спортсмен':'athlete',
+'сонце':'sun','місяць':'moon','зірка':'star','веселка':'rainbow','хмара':'cloud','дощ':'rain','гроза':'thunderstorm','сніг':'snow','торнадо':'tornado','хвиля':'wave','вогонь':'fire','крапля води':'water drop','дерево':'tree','ялинка':'pine tree','пальма':'palm tree','кактус':'cactus','тюльпан':'tulip','троянда':'rose','соняшник':'sunflower','ромашка':'daisy','конюшина':'clover','кленовий листок':'maple leaf','осіннє листя':'autumn leaves','паросток':'sprout','колосся':'wheat','гори':'mountains','вулкан':'volcano','острів':'island','пляж':'beach','пустеля':'desert','схід сонця':'sunrise','гірський світанок':'mountain sunrise','зоряне небо':'starry sky','Земля':'Earth','камінь':'rock','колода':'log','намет':'tent','гніздо':'nest','корал':'coral','гібіскус':'hibiscus','лотос':'lotus','листя':'leaves','трава':'grass','вітер':'wind','туман':'fog','термометр':'thermometer','крижинка':'ice cube','падаюча зірка':'shooting star','ліс':'forest',
+'футболка':'T-shirt','штани':'trousers','сукня':'dress','блузка':'blouse','куртка':'jacket','шкарпетки':'socks','кросівки':'sneakers','черевики':'shoes','чоботи':'boots','капці':'slippers','кепка':'cap','капелюх':'hat','циліндр':'top hat','шарф':'scarf','рукавички':'gloves','рукавиця':'mitten','сонцезахисні окуляри':'sunglasses','окуляри':'glasses','годинник':'watch','каблучка':'ring','рюкзак':'backpack','сумка':'bag','гаманець':'wallet','валіза':'suitcase','парасолька':'umbrella','корона':'crown','помада':'lipstick','гребінець':'comb','віяло':'fan','халат':'robe','жилет':'vest','сарі':'sari','купальник':'swimsuit','шорти':'shorts','труси':'underwear','балетки':'ballet flats','туристичні черевики':'hiking boots','шолом':'helmet','каска':'hard hat','бантик':'bow','клубок ниток':'ball of yarn','вовна':'wool','вузол':'knot','краватка':'tie','булавка':'safety pin','крем':'cream','діамант':'diamond','намисто':'necklace',
+'футбольний м’яч':'soccer ball','баскетбольний м’яч':'basketball','м’яч для американського футболу':'football','бейсбольний м’яч':'baseball','тенісний м’яч':'tennis ball','волейбольний м’яч':'volleyball','більярдні кулі':'billiard balls','настільний теніс':'table tennis','бадмінтон':'badminton','боксерська рукавичка':'boxing glove','повітряний змій':'kite','плюшевий ведмедик':'teddy bear','матрьошка':'nesting doll','шахова фігура':'chess piece','кубик':'die','карта джокер':'joker card','мішень':'target','боулінг':'bowling','ігрова приставка':'game console','джойстик':'joystick','гітара':'guitar','піаніно':'piano','барабан':'drum','труба':'trumpet','скрипка':'violin','мікрофон':'microphone','палітра':'palette','олівці':'colored pencils','маракаси':'maracas','флейта':'flute','кіно':'movie','маски театру':'theater masks','цирк':'circus','карусель':'carousel','колесо огляду':'Ferris wheel','американські гірки':'roller coaster','квиток':'ticket','кубок':'trophy','золота медаль':'gold medal','ковзани':'ice skates','лижі':'skis','лук':'bow','бумеранг':'boomerang','скелелазіння':'rock climbing','чарівна паличка':'magic wand',
+'джин':'genie','привид':'ghost','череп':'skull','ельф':'elf','супергероїня':'superheroine','лиходій':'villain','космічний мандрівник':'space traveler','магічне зілля':'magic potion','кришталева куля':'crystal ball','чарівний ключ':'magic key','замок':'castle','щит':'shield','мечі':'swords','сокира':'axe','лук і стріли':'bow and arrows','мушля':'seashell','кальмар':'squid','медуза':'jellyfish','тюлень':'seal','видра':'otter','омар':'lobster','устриця':'oyster','риба фугу':'pufferfish','водяна лілія':'water lily','якір':'anchor','піратський прапор':'pirate flag','морський цар':'sea king','голова дракона':'dragon head','чарівне гніздо':'magic nest','маленька фея':'little fairy','ельфійка':'elf girl','відьма':'witch','повний місяць':'full moon','павутина':'spider web','павук':'spider','надгробок':'tombstone','оберіг':'amulet',
+'біг':'running','ходьба':'walking','стояти на колінах':'kneeling','перекид':'somersault','жонглювання':'juggling','йога':'yoga','підняття ваги':'weightlifting','боротьба':'wrestling','фехтування':'fencing','плавання':'swimming','велоспорт':'cycling','гірський велосипед':'mountain biking','серфінг':'surfing','верхова їзда':'horseback riding','лижник':'skier','сноуборд':'snowboarding','водне поло':'water polo','гандбол':'handball','гольф':'golf','карате':'karate','ворота':'goal','стадіон':'stadium','медаль':'medal','нагорода':'award','катання з гірки':'sliding','катання на роликах':'roller skating','фігурне катання':'figure skating','парашут':'parachute','веслування':'rowing','човняр':'rower','стрільба з лука':'archery','рибалка':'fishing','розтяжка':'stretching','гандболістка':'handball player','волейбол':'volleyball','баскетбол':'basketball','футбол':'soccer','теніс':'tennis','пінг-понг':'ping-pong','бокс':'boxing','дзюдо':'judo','перемога':'victory','перше місце':'first place','друге місце':'second place','третє місце':'third place','прапорець':'flag','секундомір':'stopwatch',
+'будинок':'house','будинок із садом':'house with a garden','офіс':'office','школа':'school','лікарня':'hospital','банк':'bank','готель':'hotel','магазин':'shop','торговий центр':'shopping mall','завод':'factory','церква':'church','мечеть':'mosque','храм':'temple','вежа':'tower','статуя свободи':'Statue of Liberty','кам’яна статуя':'stone statue','фонтан':'fountain','міст':'bridge','шосе':'highway','вокзал':'train station','автобусна зупинка':'bus stop','аеропорт':'airport','порт':'port','парк атракціонів':'amusement park','морський пляж':'seaside beach','кемпінг':'camping','тропічний острів':'tropical island','гірська вершина':'mountain peak','гора Фудзі':'Mount Fuji','національний парк':'national park','місто ввечері':'city at dusk','нічне місто':'city at night','місто з хмарочосами':'city with skyscrapers','захід сонця над містом':'sunset over the city','селище':'village','старий будинок':'old house','будівництво':'construction site','хатинка':'cabin','музей':'museum','бібліотека':'library','театр':'theater','кінотеатр':'movie theater','супермаркет':'supermarket','дитяча кімната':'playroom'
+};
+const decks = Object.entries(raw).flatMap(([cat,items])=>items.map(([emoji,word])=>({cat,emoji,word})));
+const $=id=>document.getElementById(id);
+let deck=[],current=null,score=0,round=1,time=45,remaining=45,timer=null,used=new Set();
+Object.keys(raw).forEach(c=>{let o=document.createElement('option');o.value=c;o.textContent=c;$('category').appendChild(o)});
+$('count').textContent=decks.length+' карток';
+function applyLanguage(){const en=language==='en';document.documentElement.lang=en?'en':'uk';$('flagUk').classList.toggle('active',!en);$('flagEn').classList.toggle('active',en);$('language').setAttribute('aria-label',en?'Switch to Ukrainian':'Перемкнути на англійську');$('title').textContent=en?'🎉 Kids’ Alias':'🎉 Сімейний Alias';$('subtitle').textContent=en?'Play with pictures — no reading needed!':'Граємо за картинками — читати не потрібно!';$('categoryLabel').textContent=en?'Category':'Категорія';$('durationLabel').textContent=en?'Round length':'Тривалість раунду';$('category').options[0].textContent=en?'All categories':'Усі категорії';Array.from($('category').options).slice(1).forEach(o=>o.textContent=en?(categoryEn[o.value]||o.value):o.value);$('duration').options[0].textContent=en?'30 seconds':'30 секунд';$('duration').options[1].textContent=en?'45 seconds':'45 секунд';$('duration').options[2].textContent=en?'60 seconds':'60 секунд';$('duration').options[3].textContent=en?'90 seconds':'90 секунд';$('correct').textContent=en?'✓ Correct (+1)':'✓ Вірно (+1)';$('skip').textContent=en?'Skip ↷':'Пропустити ↷';$('start').textContent=en?'▶ Start round':'▶ Почати раунд';$('reset').textContent=en?'Reset score':'Обнулити бали';$('howTitle').textContent=en?'How to play':'Як грати';let ps=document.querySelectorAll('main section.panel:last-of-type p');if(ps.length===3){ps[0].textContent=en?'1. One player looks at the picture and explains it with words or gestures. The other player guesses.':'1. Дитина дивиться на картинку й пояснює її дорослому словами або жестами. Або дорослий пояснює картинку дитині.';ps[1].textContent=en?'2. Do not say the answer itself. The answer is shown below the picture.':'2. Не можна вимовляти саме слово-відповідь. Відповідь показана під зображенням.';ps[2].textContent=en?'3. Press “Correct” for each guessed picture. You can also play without a timer.':'3. За кожну вгадану картинку натискайте «Вірно». Можна грати й без таймера.'}$('hint').textContent=en?'Explain the picture with words or gestures. Don’t say its name!':'Поясни картинку словами або жестами. Не називай її!';$('round').textContent=en?'Round '+round:'Раунд '+round;$('count').textContent=decks.length+(en?' cards':' карток');document.querySelector('footer').textContent=en?'Works offline after the file is downloaded. Cards and scores are not sent online.':'Працює локально після завантаження файлу. Картки та бали не надсилаються в інтернет.';if(current)$('answer').textContent=en?(wordEn[current.word]||current.word):current.word}
+$('language').onclick=()=>{language=language==='uk'?'en':'uk';applyLanguage()};
+function refill(){let c=$('category').value;deck=decks.filter(x=>c==='all'||x.cat===c).filter(x=>!used.has(x.cat+'|'+x.word));if(!deck.length){used.clear();deck=decks.filter(x=>c==='all'||x.cat===c)}}
+function draw(){if(!deck.length)refill();let i=Math.floor(Math.random()*deck.length);current=deck.splice(i,1)[0];used.add(current.cat+'|'+current.word);$('picture').textContent=current.emoji;$('answer').textContent=language==='en'?(wordEn[current.word]||current.word):current.word;$('hint').textContent=(language==='en'?(categoryEn[current.cat]||current.cat)+' • Explain the picture with words or gestures':current.cat+' • Поясни картинку словами або жестами');$('round').textContent=language==='en'?'Round '+round:'Раунд '+round}
+function stop(){if(timer){clearInterval(timer);timer=null}}
+function tick(){remaining--; $('timer').textContent=remaining;if(remaining<=0){stop();$('hint').textContent=language==='en'?'Time is up! Press “Start round” to play another round.':'Час вийшов! Натисни «Почати раунд» для наступного раунду.'}}
+$('start').onclick=()=>{stop();round++;time=+$('duration').value;remaining=time;$('timer').textContent=remaining;draw();timer=setInterval(tick,1000)}
+$('correct').onclick=()=>{score++;$('score').textContent=score;draw()}
+$('skip').onclick=draw;
+$('reset').onclick=()=>{score=0;round=0;$('score').textContent='0';$('round').textContent=language==='en'?'Round 0':'Раунд 0';stop();remaining=+$('duration').value;$('timer').textContent=remaining;used.clear();refill();draw()}
+$('category').onchange=()=>{used.clear();refill();draw()};
+applyLanguage();draw();
+</script>
+<script>
+const applyAliasTitle=applyLanguage;
+applyLanguage=function(){applyAliasTitle();const en=language==='en';if(!en)document.getElementById('title').textContent='🎉 Дитячий Alias';document.title=en?'Kids’ Alias — pictures':'Дитячий Alias — картинки'};
+applyLanguage();
+</script>
+</body></html>
